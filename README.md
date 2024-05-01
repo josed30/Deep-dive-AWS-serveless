@@ -1,1 +1,1 @@
-# Deep-dive-AWS-serveless
+# Deep Dive AWS Serveless
