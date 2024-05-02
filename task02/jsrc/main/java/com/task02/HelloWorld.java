@@ -23,11 +23,20 @@ import java.util.Map;
 		authType = AuthType.NONE,
 		invokeMode = InvokeMode.BUFFERED
 )
-public class HelloWorld implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
+public class HelloWorld implements RequestHandler<Map<String, Object>, String> {
 
 	private static final int SC_OK = 200;
 	private static final int SC_BAD_REQUEST = 400;
-	private static final String PATH = "hello";
+	private static final String REQUEST_CONTEXT = "requestContext";
+	private static final String HTTP = "http";
+	private static final String METHOD = "method";
+	private static final String PATH = "path";
+
+	private static final String HELLO_PATH = "/hello";
+	private static final String GET_METHOD = "GET";
+
+
+
 	private static String RESPONSE = "{'statusCode': %d, 'message': '%s'}";
 
 	private static String MESSAGE_OK = "Hello from Lambda";
@@ -35,25 +44,26 @@ public class HelloWorld implements RequestHandler<APIGatewayProxyRequestEvent, A
 
 
 
-	public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent request, Context context) {
-		String method = request.getHttpMethod();
-		String path = request.getPath();
+	public String handleRequest(Map<String, Object> request, Context context) {
+
+		Map<String, Object> requestContext = (Map<String, Object>) request.get(REQUEST_CONTEXT);
+		Map<String, Object> http = (Map<String, Object>) requestContext.get(HTTP);
+		String method = (String)http.get(METHOD);
+		String path = (String)http.get(PATH);
 
 		int code = SC_OK;
 		String message = MESSAGE_OK;
 
-		/*if(!PATH.equals(path)) {
+		if(!HELLO_PATH.equals(path) || !GET_METHOD.equals(method)) {
 			code = SC_BAD_REQUEST;
 			message = String.format(MESSAGE_BAD_REQUEST, path, method);
-		}*/
+		}
 
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("statusCode", SC_OK);
-		resultMap.put("message", MESSAGE_OK);
+		resultMap.put("statusCode", code);
+		resultMap.put("message", message);
 
+		return new Gson().toJson(resultMap);
 
-		return new APIGatewayProxyResponseEvent()
-				.withStatusCode(code)
-				.withBody(new Gson().toJson(resultMap));
 	}
 }
