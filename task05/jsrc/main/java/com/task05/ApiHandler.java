@@ -37,7 +37,7 @@ import java.text.SimpleDateFormat;
 public class ApiHandler implements RequestHandler<Map<String, Object>, String> {
 
 	private Gson parser = new Gson();
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sssZ");
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.ssssss");
 
 	public String handleRequest(Map<String, Object> request, Context context) {
 
