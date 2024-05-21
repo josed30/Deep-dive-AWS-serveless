@@ -74,7 +74,7 @@ public class ApiHandler implements RequestHandler<Map<String, Object>, String> {
 			itemValues.put("body", AttributeValue.builder().m(convert(content)).build());
 
 			PutItemRequest request = PutItemRequest.builder()
-					.tableName(System.getenv("table"))
+					.tableName(System.getenv("target_table"))
 					.item(itemValues)
 					.build();
 
