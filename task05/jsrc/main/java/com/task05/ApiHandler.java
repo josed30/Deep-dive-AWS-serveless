@@ -12,6 +12,8 @@ import software.amazon.awssdk.services.dynamodb.model.DynamoDbException;
 import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
 import software.amazon.awssdk.services.dynamodb.model.PutItemResponse;
 import software.amazon.awssdk.services.dynamodb.model.ResourceNotFoundException;
+import com.syndicate.deployment.annotations.environment.EnvironmentVariable;
+import com.syndicate.deployment.annotations.environment.EnvironmentVariables;
 
 
 import com.google.gson.Gson;
@@ -29,9 +31,11 @@ import java.text.SimpleDateFormat;
 	isPublishVersion = false,
 	logsExpiration = RetentionSetting.SYNDICATE_ALIASES_SPECIFIED
 )
+@EnvironmentVariables(value = {
+		@EnvironmentVariable(key = "region", value = "${region}"),
+		@EnvironmentVariable(key = "target_table", value = "${target_table}")})
 public class ApiHandler implements RequestHandler<Map<String, Object>, String> {
 
-	private String EVENTS = "cmtr-b8a90326-Events-test";
 	private Gson parser = new Gson();
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sssZ");
 
@@ -70,7 +74,7 @@ public class ApiHandler implements RequestHandler<Map<String, Object>, String> {
 			itemValues.put("body", AttributeValue.builder().m(convert(content)).build());
 
 			PutItemRequest request = PutItemRequest.builder()
-					.tableName(EVENTS)
+					.tableName(System.getenv("table"))
 					.item(itemValues)
 					.build();
 
