@@ -31,7 +31,7 @@ import java.text.SimpleDateFormat;
 )
 public class ApiHandler implements RequestHandler<Map<String, Object>, String> {
 
-	private String EVENTS = "cmtr-b8a90326-Events";
+	private String EVENTS = "cmtr-b8a90326-Events-test";
 	private Gson parser = new Gson();
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sssZ");
 
@@ -45,7 +45,7 @@ public class ApiHandler implements RequestHandler<Map<String, Object>, String> {
 
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("statusCode", 201);
-		resultMap.put("events", request);
+		resultMap.put("event", response.attributes());
 		return new Gson().toJson(resultMap);
 
 	}
