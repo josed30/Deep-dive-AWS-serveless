@@ -45,21 +45,28 @@ public class ApiHandler implements RequestHandler<Map<String, Object>, String> {
 		String id = UUID.randomUUID().toString();
 		String createdAt = sdf.format(Calendar.getInstance().getTime());
 
-		PutItemResponse response = persist(id, request);
+		Map<String, Object> response = persist(id, request);
 
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("statusCode", 201);
-		resultMap.put("event", response.attributes());
+		resultMap.put("event", response);
 		return new Gson().toJson(resultMap);
 
 	}
 
 
-	private PutItemResponse persist(String id, Map<String, Object> body){
+	private Map<String, Object> persist(String id, Map<String, Object> body){
 		DynamoDbClient client = null;
 		String principalId = String.valueOf(body.get("principalId"));
 		String createdAt = sdf.format(Calendar.getInstance().getTime());
 		Map<String, String> content = (Map<String, String>)body.get("content");
+		Map<String, Object> response = new HashMap<>();
+
+		response.put("id", id);
+		response.put("principalId", Integer.valueOf(principalId));
+		response.put("createdAt", createdAt);
+		response.put("body", content);
+
 
 		try {
 			Region region = Region.EU_CENTRAL_1;
@@ -78,7 +85,7 @@ public class ApiHandler implements RequestHandler<Map<String, Object>, String> {
 					.item(itemValues)
 					.build();
 
-            return client.putItem(request);
+            return response;
 
 		}finally{
 			if(client != null){
