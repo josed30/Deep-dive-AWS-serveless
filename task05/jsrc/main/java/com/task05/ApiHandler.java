@@ -85,6 +85,8 @@ public class ApiHandler implements RequestHandler<Map<String, Object>, Map<Strin
 					.item(itemValues)
 					.build();
 
+			client.putItem(request);
+
             return response;
 
 		}finally{
