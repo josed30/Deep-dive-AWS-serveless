@@ -34,12 +34,12 @@ import java.text.SimpleDateFormat;
 @EnvironmentVariables(value = {
 		@EnvironmentVariable(key = "region", value = "${region}"),
 		@EnvironmentVariable(key = "target_table", value = "${target_table}")})
-public class ApiHandler implements RequestHandler<Map<String, Object>, String> {
+public class ApiHandler implements RequestHandler<Map<String, Object>, Map<String, Object>> {
 
 	private Gson parser = new Gson();
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.ssssss");
 
-	public String handleRequest(Map<String, Object> request, Context context) {
+	public Map<String, Object> handleRequest(Map<String, Object> request, Context context) {
 
 
 		String id = UUID.randomUUID().toString();
@@ -47,10 +47,10 @@ public class ApiHandler implements RequestHandler<Map<String, Object>, String> {
 
 		Map<String, Object> response = persist(id, request);
 
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("statusCode", 201);
 		resultMap.put("event", response);
-		return new Gson().toJson(resultMap);
+		return resultMap;
 
 	}
 
